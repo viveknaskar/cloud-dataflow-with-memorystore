@@ -8,6 +8,7 @@ Java code to create dataflow pipeline that reads file data from a cloud storage,
 mvn compile exec:java \
   -Dexec.mainClass=com.viveknaskar.DataFlowPipelineForMemStore \
   -Dexec.args="--project=your-project-id \
+  --jobName=dataflow-memstore-job \
   --stagingLocation=gs://cloud-function-gcsbucket/staging/ \
   --dataflowJobFile=gs://dataflow-pipeline-staging/templates/dataflow-memorystore-template \
   --tempLocation=gs://cloud-function-gcsbucket/tmp/ \
