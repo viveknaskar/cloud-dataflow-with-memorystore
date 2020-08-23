@@ -21,3 +21,25 @@ mvn compile exec:java \
   --tempLocation=gs://cloud-function-gcsbucket/tmp/ \
   --runner=DataflowRunner"
   ```
+
+## Check the data inserted in Memorystore (Redis) datastore
+For checking whether the processed data is stored in the Redis instance after the dataflow pipeline is executed successfully, you must first connect to the Redis instance from any Compute Engine VM instance located within the same project, region and network as the Redis instance.
+
+1) Create a VM instance and SSH to it
+
+2) Install telnet from apt-get in the VM instance
+```
+  sudo apt-get install telnet
+```
+3) From the VM instance, connect to the ip-address of the redis instance
+```
+  telnet instance-ip-address 6379
+```
+4) Once you are in the redis, check the keys insterted
+```
+  keys *
+```
+
+### References
+
+https://redis.io/topics/data-types-intro 
