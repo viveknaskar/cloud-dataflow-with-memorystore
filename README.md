@@ -9,7 +9,7 @@ Dataflow is a fully-managed service to execute pipelines within the Google Cloud
 Memorystore for Redis provides a fully-managed service that is powered by the Redis in-memory data store to build application caches that provide sub-millisecond data access.
 With Memorystore for Redis, you can easily achieve your latency and throughput targets by scaling up your Redis instances with minimal impact to your application's availability.
 
-## Command to execute to creating the template:
+## Command to execute for creating the template:
 
 ```
 mvn compile exec:java \
