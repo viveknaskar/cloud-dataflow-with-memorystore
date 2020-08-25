@@ -35,7 +35,7 @@ For checking whether the processed data is stored in the Redis instance after th
 ```
   telnet instance-ip-address 6379
 ```
-4) Once you are in the redis, check the keys insterted
+4) Once you are in the redis, check the keys inserted
 ```
   keys *
 ```

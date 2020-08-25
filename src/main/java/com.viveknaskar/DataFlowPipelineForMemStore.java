@@ -87,7 +87,7 @@ public class DataFlowPipelineForMemStore {
                             }
                         }))
                 .apply(RedisIO.write().withMethod(RedisIO.Write.Method.SADD)
-                        .withEndpoint("10.201.96.187", 6379));
+                        .withEndpoint("127.0.0.1", 6379)); // Update the running Redis instance host
 
         p.run();
 
