@@ -48,4 +48,6 @@ For checking whether the processed data is stored in the Redis instance after th
 
 https://redis.io/topics/data-types-intro 
 
+https://beam.apache.org/documentation/programming-guide/
+
 https://thedeveloperstory.com/2020/07/24/cloud-dataflow-a-unified-model-for-batch-and-streaming-data-processing/ 
