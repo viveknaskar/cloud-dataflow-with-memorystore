@@ -16,11 +16,11 @@ mvn compile exec:java \
   -Dexec.mainClass=com.viveknaskar.DataFlowPipelineForMemStore \
   -Dexec.args="--project=your-project-id \
   --jobName=dataflow-memstore-job \
-  --stagingLocation=gs://cloud-function-gcsbucket/staging/ \
-  --dataflowJobFile=gs://dataflow-pipeline-staging/templates/dataflow-memorystore-template \
-  --tempLocation=gs://cloud-function-gcsbucket/tmp/ \
+  --stagingLocation=gs://cloud-dataflow-pipeline-bucket/staging/ \
+  --dataflowJobFile=gs://cloud-dataflow-pipeline-bucket/templates/dataflow-custom-redis-template \
+  --gcpTempLocation=gs://cloud-dataflow-pipeline-bucket/tmp/ \
   --runner=DataflowRunner"
-  ```
+```
 
 ## Check the data inserted in Memorystore (Redis) datastore
 For checking whether the processed data is stored in the Redis instance after the dataflow pipeline is executed successfully, you must first connect to the Redis instance from any Compute Engine VM instance located within the same project, region and network as the Redis instance.
