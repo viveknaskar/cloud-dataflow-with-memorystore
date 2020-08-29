@@ -1,4 +1,4 @@
-# cloud-dataflow-with-memorystore 
+# Cloud Dataflow with Memorystore 
 
 Code to create dataflow pipeline that reads file data from a cloud storage, processes and transforms it and outputs the transformed data in Google's own in-memory datastore which is their Redis implemenation called memorystore. The pipeline code is written in Java and have been worked upon Apache Beam's SDK.
 
@@ -39,9 +39,17 @@ For checking whether the processed data is stored in the Redis instance after th
 ```
   keys *
 ```
-5) Check whether the data is inserted using the below command to get the guid
+5) Check whether the data is inserted using the intersection command to get the guid
 ```
   sinter firstname:<firstname> lastname:<lastname> dob:<dob> postalcode:<post-code>
+```
+6) Check with individual entry using the below command
+```
+  smembers firstname:<firstname>
+```
+7) Command to clear the redis data store
+```
+  flushall
 ```
 
 ### References
