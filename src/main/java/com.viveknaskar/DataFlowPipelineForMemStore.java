@@ -17,15 +17,29 @@ public class DataFlowPipelineForMemStore {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataFlowPipelineForMemStore.class);
 
     public static interface WordCountOptions extends PipelineOptions {
+        /**
+         * Bucket where the text files are taken as input file
+         */
         @Description("Path of the file to read from")
-        @Default.String("gs://cloud-function-gcsbucket/RedisFile.txt")
+        @Default.String("DEFAULT")
         String getInputFile();
         void setInputFile(String value);
 
-        @Description("Path of the file to write to")
-        @Default.String("gs://cloud-function-gcsbucket/outputRedisFile.txt")
-        String getOutput();
-        void setOutput(String value);
+        /**
+         * Memorystore/Redis instance host. Update with a running memorystore instance in the command-line to execute the pipeline
+         */
+        @Description("Redis host")
+        @Default.String("DEFAULT")
+        String getRedisHost();
+        void setRedisHost(String value);
+
+        /**
+         * Memorystore/Redis instance port. The default port for Redis is 6379
+         */
+        @Description("Redis port")
+        @Default.Integer(6379)
+        Integer getRedisPort();
+        void setRedisPort(Integer value);
 
     }
 
@@ -47,48 +61,26 @@ public class DataFlowPipelineForMemStore {
                         ParDo.of(new DoFn<String[], KV<String, String>>() {
                             @ProcessElement
                             public void ProcessData(@Element String[] fields, OutputReceiver<KV<String, String>> out) {
-                                String guid = null;
-                                String firstName = null;
-                                String lastName = null;
-                                String dob = null;
-                                String postalCode = null;
+                                if (fields[RedisIndex.GUID.getValue()] != null) {
 
-                                for (String field : fields) {
-                                    LOGGER.info("field data: " + field.toString() );
-                                    String[] fieldKeyValue = field.split(":");
-                                    if(fieldKeyValue.length == 2) {
-                                        String key = fieldKeyValue[0].trim().toLowerCase();
-                                        String value = fieldKeyValue[1].trim().toLowerCase();
-                                        if(key.equals("guid")) {
-                                            guid = value;
-                                            LOGGER.info("found guid: "+guid);
-                                        } else if(key.equals("firstname")) {
-                                            firstName = value;
-                                            LOGGER.info("found firstName: " + firstName);
-                                        } else if(key.equals("lastname")) {
-                                            lastName = value;
-                                            LOGGER.info("found lastName: " + lastName);
-                                        } else if(key.equals("dob")) {
-                                            dob = value;
-                                            LOGGER.info("found dob: " + dob);
-                                        } else if(key.equals("postalcode")) {
-                                            postalCode = value;
-                                            LOGGER.info("found postalCode: " + postalCode);
-                                        }
-                                    }
-                                }
+                                    out.output(KV.of("firstName:"
+                                            .concat(fields[RedisIndex.FIRSTNAME.getValue()]), fields[RedisIndex.GUID.getValue()]));
 
-                                if(guid != null) {
-                                    out.output(KV.of("firstname:".concat(firstName), guid));
-                                    out.output(KV.of("lastname:".concat(lastName), guid));
-                                    out.output(KV.of("dob:".concat(dob), guid));
-                                    out.output(KV.of("postalcode:".concat(postalCode), guid));
+                                    out.output(KV.of("lastName:"
+                                            .concat(fields[RedisIndex.LASTNAME.getValue()]), fields[RedisIndex.GUID.getValue()]));
+
+                                    out.output(KV.of("dob:"
+                                            .concat(fields[RedisIndex.DOB.getValue()]), fields[RedisIndex.GUID.getValue()]));
+
+                                    out.output(KV.of("postalCode:"
+                                            .concat(fields[RedisIndex.POSTAL_CODE.getValue()]), fields[RedisIndex.GUID.getValue()]));
+
                                 }
                             }
                         }))
-                .apply(RedisIO.write().withMethod(RedisIO.Write.Method.SADD)
-                        .withEndpoint("127.0.0.1", 6379)); // Update the running Redis instance host
-
+                .apply("Writing field indexes into redis",
+                RedisIO.write().withMethod(RedisIO.Write.Method.SADD)
+                        .withEndpoint(options.getRedisHost(), options.getRedisPort()));
         p.run();
 
     }

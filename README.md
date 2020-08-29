@@ -16,9 +16,11 @@ mvn compile exec:java \
   -Dexec.mainClass=com.viveknaskar.DataFlowPipelineForMemStore \
   -Dexec.args="--project=your-project-id \
   --jobName=dataflow-memstore-job \
-  --stagingLocation=gs://cloud-dataflow-pipeline-bucket/staging/ \
-  --dataflowJobFile=gs://cloud-dataflow-pipeline-bucket/templates/dataflow-custom-redis-template \
-  --gcpTempLocation=gs://cloud-dataflow-pipeline-bucket/tmp/ \
+  --inputfile=gs://cloud-dataflow-input-bucket/*.txt \
+  --redisHost=127.0.0.1 \
+  --stagingLocation=gs://dataflow-pipeline-batch-bucket/staging/ \
+  --dataflowJobFile=gs://dataflow-pipeline-batch-bucket/templates/dataflow-custom-redis-template \
+  --gcpTempLocation=gs://dataflow-pipeline-batch-bucket/tmp/ \
   --runner=DataflowRunner"
 ```
 
@@ -43,7 +45,7 @@ For checking whether the processed data is stored in the Redis instance after th
 ```
   sinter firstname:<firstname> lastname:<lastname> dob:<dob> postalcode:<post-code>
 ```
-6) Check with individual entry using the below command
+6) Check with individual entry using the below command to get the guid
 ```
   smembers firstname:<firstname>
 ```
