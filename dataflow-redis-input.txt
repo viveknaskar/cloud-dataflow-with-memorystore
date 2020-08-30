@@ -1,0 +1,5 @@
+xxxxxx|bruce|wayne|31051989|4444
+yyyyyy|selina|thomas|01051989|2222
+aaaaaa|clark|kent|31051990|6666
+xxxxxx|bruce|banner|06041989|7777
+cccccc|tony|stark|31011989|5555
