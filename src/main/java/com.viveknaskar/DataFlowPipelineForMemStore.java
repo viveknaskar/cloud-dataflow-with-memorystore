@@ -10,13 +10,10 @@ import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.values.KV;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class DataFlowPipelineForMemStore {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DataFlowPipelineForMemStore.class);
 
-    public static interface WordCountOptions extends PipelineOptions {
+    public static interface StorageToRedisOptions extends PipelineOptions {
         /**
          * Bucket where the text files are taken as input file
          */
@@ -44,35 +41,39 @@ public class DataFlowPipelineForMemStore {
     }
 
     public static void main(String[] args) {
-        WordCountOptions options = PipelineOptionsFactory.fromArgs(args).withValidation().as(WordCountOptions.class);
+        /**
+         * Constructed StorageToRedisOptions object using the method PipelineOptionsFactory.fromArgs to read options from command-line
+         */
+        StorageToRedisOptions options = PipelineOptionsFactory.fromArgs(args)
+                .withValidation()
+                .as(StorageToRedisOptions.class);
 
         Pipeline p = Pipeline.create(options);
-        p.apply("Reading Lines", TextIO.read().from(options.getInputFile()))
-                .apply("Transforming data",
+        p.apply("Reading Lines...", TextIO.read().from(options.getInputFile()))
+                .apply("Transforming data...",
                         ParDo.of(new DoFn<String, String[]>() {
                             @ProcessElement
                             public void TransformData(@Element String line, OutputReceiver<String[]> out) {
-                                LOGGER.info("line content: " + line);
                                 String[] fields = line.split("\\|");
                                 out.output(fields);
                             }
                         }))
-                .apply("Processing data",
+                .apply("Processing data...",
                         ParDo.of(new DoFn<String[], KV<String, String>>() {
                             @ProcessElement
                             public void ProcessData(@Element String[] fields, OutputReceiver<KV<String, String>> out) {
                                 if (fields[RedisIndex.GUID.getValue()] != null) {
 
-                                    out.output(KV.of("firstName:"
+                                    out.output(KV.of("firstname:"
                                             .concat(fields[RedisIndex.FIRSTNAME.getValue()]), fields[RedisIndex.GUID.getValue()]));
 
-                                    out.output(KV.of("lastName:"
+                                    out.output(KV.of("lastname:"
                                             .concat(fields[RedisIndex.LASTNAME.getValue()]), fields[RedisIndex.GUID.getValue()]));
 
                                     out.output(KV.of("dob:"
                                             .concat(fields[RedisIndex.DOB.getValue()]), fields[RedisIndex.GUID.getValue()]));
 
-                                    out.output(KV.of("postalCode:"
+                                    out.output(KV.of("postalcode:"
                                             .concat(fields[RedisIndex.POSTAL_CODE.getValue()]), fields[RedisIndex.GUID.getValue()]));
 
                                 }
