@@ -16,7 +16,7 @@ mvn compile exec:java \
   -Dexec.mainClass=com.viveknaskar.DataFlowPipelineForMemStore \
   -Dexec.args="--project=your-project-id \
   --jobName=dataflow-memstore-job \
-  --inputfile=gs://cloud-dataflow-input-bucket/*.txt \
+  --inputFile=gs://cloud-dataflow-input-bucket/*.txt \
   --redisHost=127.0.0.1 \
   --stagingLocation=gs://dataflow-pipeline-batch-bucket/staging/ \
   --dataflowJobFile=gs://dataflow-pipeline-batch-bucket/templates/dataflow-custom-redis-template \
